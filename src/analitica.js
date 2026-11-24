@@ -44,10 +44,52 @@ function ventaMayor(ventas) {
     return mayor;
 }
 
+function ticketPromedio(ventas) {
+  let total = 0;
+  let validas = 0;
+
+  for (const venta of ventas) {
+    if (venta.cantidad > 0) {
+      total += valorVenta(venta);
+      validas++;
+    }
+  }
+
+  if (validas === 0) {
+    return 0;
+  }
+
+  return total / validas;
+}
+
+function ventasPorCiudad(ventas, ciudad) {
+  let total = 0;
+  const ciudadBuscada = ciudad.trim().toLowerCase();
+
+  for (const venta of ventas) {
+    const ciudadVenta = venta.ciudad.trim().toLowerCase();
+    if (ciudadVenta === ciudadBuscada) {
+      total += valorVenta(venta);
+    }
+  }
+
+  return total;
+}
+
+
+
+
+
+
 // Exportar las funciones
 module.exports = {
     totalVendido,
     unidadesVendidas,
-    ventaMayor
+    ventaMayor,
+    ticketPromedio,
+    ventasPorCiudad
+
+
+
 };
 

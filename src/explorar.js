@@ -1,4 +1,7 @@
+
+
 const ventas = require("./datos.js");
+const { ticketPromedio, ventasPorCiudad } = require("./analitica.js");
 
 
 console.log("Cantidad de registros:", ventas.length);
@@ -19,4 +22,7 @@ console.log(ventas[4].producto);
 console.log("Tabla completa de ventas:");
 console.table(ventas);
 
-console.log(ventas)
+console.log('Ticket promedio:', ticketPromedio(ventas));
+
+console.log('Medellín:', ventasPorCiudad(ventas, "Medellín"));
+console.log('Medellín con desorden:', ventasPorCiudad(ventas, "  MEDELLÍN  "));

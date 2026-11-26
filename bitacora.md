@@ -61,3 +61,42 @@ Aunque la cadena recorre el arreglo 4 veces, en Big O se eliminan las constantes
 
 
 Dejo totalCiudadUnaPasada en el motor. La cadena se lee mejor, pero en un servidor con memoria limitada crear 3 arreglos nuevos por cada reporte es un desperdicio. La versión de una pasada da el mismo resultado, con el mismo tiempo O(n), pero con memoria O(1). En este caso, los recursos pesan más que la legibilidad.
+
+
+
+## Optimización clientes recurrentes - Método
+
+### 1. Entender
+Entrada: arreglo de ventas, cada venta tiene cliente.
+Salida: arreglo con los clientes que compraron más de 1 vez, sin repetidos.
+Restricciones: debe responder en menos de 1 segundo con 100.000 ventas. No puede usar ciclos anidados.
+
+### 2. Ejemplos y casos borde
+- Ventas vacías -> []
+- Todas de un solo cliente -> [ese cliente]
+- Todos clientes distintos -> []
+- Un cliente con 2 compras y resto distintos -> [ese cliente]
+
+### 3. Fuerza bruta
+Versión actual: por cada venta compara con todas las demás.
+Complejidad: Tiempo O(n²), Espacio O(r) donde r = recurrentes.
+Problema: con 100.000 tarda 20,7 segundos.
+
+### 4. Idea de optimización
+En vez de buscar de nuevo cada cliente en todo el arreglo, guardar lo que ya vi en una estructura de búsqueda en tiempo constante: Set o Map.
+Así cada venta se revisa una sola vez.
+Complejidad esperada: Tiempo O(n), Espacio O(n) por guardar los clientes vistos.
+
+
+### Medición optimización
+
+Verificación:
+- Día 1: Original, Set y Map devuelven ['C01', 'C02', 'C03']
+- Con 5000 ventas: ¿Las 3 iguales? true
+
+Tiempos:
+- n=1000: Original 2.137ms, Set 0.038ms, Map 0.03ms
+- n=10000: Original 251.545ms, Set 0.761ms, Map 0.332ms
+- n=100000: Original 20.754s, Set 2.007ms, Map 3.13ms
+
+Conclusión: las dos versiones optimizadas son O(n) y cumplen el requisito de menos de 1 segundo con 100.000 ventas. La original era O(n²) y tardaba 20,7 segundos.

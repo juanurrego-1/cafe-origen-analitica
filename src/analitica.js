@@ -270,6 +270,69 @@ function primerClienteUnico(ventas) {
   return null;
 }
 
+
+function mejorSemanaBruta(dias, k) {
+  if (k > dias.length) return null;
+  let maxTotal = -Infinity;
+  let maxInicio = 0;
+
+  for (let i = 0; i <= dias.length - k; i++) {
+    let total = 0;
+    for (let j = 0; j < k; j++) {
+      total += dias[i + j];
+    }
+    if (total > maxTotal) {
+      maxTotal = total;
+      maxInicio = i;
+    }
+  }
+  return { total: maxTotal, inicio: maxInicio };
+}
+
+function mejorSemana(dias, k) {
+  if (k > dias.length) return null;
+
+  // 1. Calcula la primera ventana
+  let ventana = 0;
+  for (let i = 0; i < k; i++) {
+    ventana += dias[i];
+  }
+
+  let maxTotal = ventana;
+  let maxInicio = 0;
+
+  // 2. Desliza: suma el que entra, resta el que sale
+  for (let i = k; i < dias.length; i++) {
+    ventana = ventana + dias[i] - dias[i - k];
+    if (ventana > maxTotal) {
+      maxTotal = ventana;
+      maxInicio = i - k + 1;
+    }
+  }
+  return { total: maxTotal, inicio: maxInicio };
+}
+
+function parMasCercano(precios, presupuesto) {
+  let izq = 0;
+  let der = precios.length - 1;
+  let mejorPar = null;
+  let mejorSuma = -Infinity;
+
+  while (izq < der) {
+    const suma = precios[izq] + precios[der];
+    if (suma <= presupuesto) {
+      if (suma > mejorSuma) {
+        mejorSuma = suma;
+        mejorPar = [precios[izq], precios[der]];
+      }
+      izq++; // puedo intentar acercarme más subiendo el menor
+    } else {
+      der--; // me pasé, bajo el mayor
+    }
+  }
+  return mejorPar;
+}
+
 module.exports = {
   valorVenta,
   totalVendido,
@@ -295,5 +358,8 @@ module.exports = {
   comboRegaloFuerzaBruta,
   comboRegalo,
   productoEstrellaPorCiudad,
-  primerClienteUnico
+  primerClienteUnico,
+  mejorSemanaBruta,
+  mejorSemana,
+  parMasCercano
 };

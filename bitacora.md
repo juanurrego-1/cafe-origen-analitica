@@ -100,3 +100,30 @@ Tiempos:
 - n=100000: Original 20.754s, Set 2.007ms, Map 3.13ms
 
 Conclusión: las dos versiones optimizadas son O(n) y cumplen el requisito de menos de 1 segundo con 100.000 ventas. La original era O(n²) y tardaba 20,7 segundos.
+
+
+
+### Traza ventana deslizante, k = 7
+
+Posición 0, días 1 al 7: 320 + 410 + 280 + 390 + 510 + 620 + 700 = 3230
+Posición 1, días 2 al 8: 3230 - 320 + 300 = 3210
+Posición 2, días 3 al 9: 3210 - 410 + 290 = 3090
+
+Se resta el día que sale y se suma el día que entra, no se vuelve a sumar toda la semana.
+
+
+### Traza parMasCercano para 100.000, precios ordenados [18000, 26000, 35000, 42000, 45000, 79000, 95000, 120000]
+
+| izq | der | Suma | ¿Cabe? | Acción |
+|---|---|---|---|---|
+| 18000 | 120000 | 138000 | No | der-- |
+| 18000 | 95000 | 113000 | No | der-- |
+| 18000 | 79000 | 97000 | Sí | Guardo [18000, 79000], izq++ |
+| 26000 | 79000 | 105000 | No | der-- |
+| 26000 | 45000 | 71000 | Sí | No supera 97000, izq++ |
+| 35000 | 45000 | 80000 | Sí | No supera 97000, izq++ |
+| 42000 | 45000 | 87000 | Sí | No supera 97000, izq++ |
+
+Resultado: [18000, 79000] = 97000, lo más cercano sin pasar 100.000.
+Para 140.000: [45000, 95000] = 140000 exacto.
+Para 40.000: null, sin solución, porque los dos productos más baratos ya suman 44000.

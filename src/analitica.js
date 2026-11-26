@@ -203,6 +203,73 @@ function comprasPorCliente(ventas) {
   return recurrentes;
 }
 
+
+function comboRegaloFuerzaBruta(catalogo, valor) {
+  for (let i = 0; i < catalogo.length; i++) {
+    for (let j = i + 1; j < catalogo.length; j++) {
+      if (catalogo[i].precio + catalogo[j].precio === valor) {
+        return [catalogo[i], catalogo[j]];
+      }
+    }
+  }
+  return null;
+}
+
+
+function comboRegalo(catalogo, valor) {
+  const vistos = new Map(); // precio -> producto
+
+  for (const producto of catalogo) {
+    const complemento = valor - producto.precio;
+    if (vistos.has(complemento)) {
+      return [vistos.get(complemento), producto];
+    }
+    vistos.set(producto.precio, producto);
+  }
+  return null;
+}
+
+function productoEstrellaPorCiudad(ventas) {
+  const porCiudad = new Map(); // ciudad -> Map(producto -> conteo)
+
+  for (const venta of ventas) {
+    if (!porCiudad.has(venta.ciudad)) {
+      porCiudad.set(venta.ciudad, new Map());
+    }
+    const conteo = porCiudad.get(venta.ciudad);
+    conteo.set(venta.producto, (conteo.get(venta.producto) || 0) + 1);
+  }
+
+  const resultado = {};
+  for (const [ciudad, conteo] of porCiudad) {
+    let maxProducto = null;
+    let maxConteo = 0;
+    for (const [producto, cantidad] of conteo) {
+      if (cantidad > maxConteo) {
+        maxConteo = cantidad;
+        maxProducto = producto;
+      }
+    }
+    resultado[ciudad] = { producto: maxProducto, ventas: maxConteo };
+  }
+  return resultado;
+}
+
+function primerClienteUnico(ventas) {
+  const conteo = new Map();
+
+  for (const venta of ventas) {
+    conteo.set(venta.cliente, (conteo.get(venta.cliente) || 0) + 1);
+  }
+
+  for (const venta of ventas) {
+    if (conteo.get(venta.cliente) === 1) {
+      return venta.cliente;
+    }
+  }
+  return null;
+}
+
 module.exports = {
   valorVenta,
   totalVendido,
@@ -224,5 +291,9 @@ module.exports = {
   totalCiudadCadena,
   totalCiudadUnaPasada,
   clientesRecurrentesSet,
-  comprasPorCliente
+  comprasPorCliente,
+  comboRegaloFuerzaBruta,
+  comboRegalo,
+  productoEstrellaPorCiudad,
+  primerClienteUnico
 };

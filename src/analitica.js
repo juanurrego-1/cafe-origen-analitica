@@ -28,6 +28,10 @@ function ventaMayor(ventas) {
     return mayor;
 }
 
+function primerVenta(ventas) {
+  return ventas[0];
+}
+
 function ticketPromedio(ventas) {
   let total = 0;
   let validas = 0;
@@ -154,24 +158,22 @@ function clientesRecurrentes(ventas) {
 function totalCiudadCadena(ventas, ciudad) {
   const ciudadBuscada = ciudad.trim().toLowerCase();
   return ventas
-    .map(v => ({ ...v, ciudad: v.ciudad.trim().toLowerCase() })) // 1er recorrido, crea arreglo 1
-    .filter(v => v.ciudad === ciudadBuscada) // 2do recorrido, crea arreglo 2
-    .map(v => v.cantidad * v.precio) // 3er recorrido, crea arreglo 3
-    .reduce((acc, valor) => acc + valor, 0); // 4to recorrido
+    .map(v => ({ ...v, ciudad: v.ciudad.trim().toLowerCase() }))
+    .filter(v => v.ciudad === ciudadBuscada)
+    .map(v => v.cantidad * v.precio)
+    .reduce((acc, valor) => acc + valor, 0);
 }
 
 function totalCiudadUnaPasada(ventas, ciudad) {
   const ciudadBuscada = ciudad.trim().toLowerCase();
   let total = 0;
-  for (const venta of ventas) { // 1 solo recorrido, 0 arreglos nuevos
+  for (const venta of ventas) {
     if (venta.ciudad.trim().toLowerCase() === ciudadBuscada) {
       total += venta.cantidad * venta.precio;
     }
   }
   return total;
 }
-
-
 
 function clientesRecurrentesSet(ventas) {
   const vistos = new Set();
@@ -203,7 +205,6 @@ function comprasPorCliente(ventas) {
   return recurrentes;
 }
 
-
 function comboRegaloFuerzaBruta(catalogo, valor) {
   for (let i = 0; i < catalogo.length; i++) {
     for (let j = i + 1; j < catalogo.length; j++) {
@@ -215,9 +216,8 @@ function comboRegaloFuerzaBruta(catalogo, valor) {
   return null;
 }
 
-
 function comboRegalo(catalogo, valor) {
-  const vistos = new Map(); // precio -> producto
+  const vistos = new Map();
 
   for (const producto of catalogo) {
     const complemento = valor - producto.precio;
@@ -230,7 +230,7 @@ function comboRegalo(catalogo, valor) {
 }
 
 function productoEstrellaPorCiudad(ventas) {
-  const porCiudad = new Map(); // ciudad -> Map(producto -> conteo)
+  const porCiudad = new Map();
 
   for (const venta of ventas) {
     if (!porCiudad.has(venta.ciudad)) {
@@ -270,7 +270,6 @@ function primerClienteUnico(ventas) {
   return null;
 }
 
-
 function mejorSemanaBruta(dias, k) {
   if (k > dias.length) return null;
   let maxTotal = -Infinity;
@@ -292,7 +291,6 @@ function mejorSemanaBruta(dias, k) {
 function mejorSemana(dias, k) {
   if (k > dias.length) return null;
 
-  // 1. Calcula la primera ventana
   let ventana = 0;
   for (let i = 0; i < k; i++) {
     ventana += dias[i];
@@ -301,7 +299,6 @@ function mejorSemana(dias, k) {
   let maxTotal = ventana;
   let maxInicio = 0;
 
-  // 2. Desliza: suma el que entra, resta el que sale
   for (let i = k; i < dias.length; i++) {
     ventana = ventana + dias[i] - dias[i - k];
     if (ventana > maxTotal) {
@@ -325,9 +322,9 @@ function parMasCercano(precios, presupuesto) {
         mejorSuma = suma;
         mejorPar = [precios[izq], precios[der]];
       }
-      izq++; // puedo intentar acercarme más subiendo el menor
+      izq++;
     } else {
-      der--; // me pasé, bajo el mayor
+      der--;
     }
   }
   return mejorPar;
@@ -338,6 +335,7 @@ module.exports = {
   totalVendido,
   unidadesVendidas,
   ventaMayor,
+  primerVenta,
   ticketPromedio,
   ventasPorCiudad,
   totalVendidoM,

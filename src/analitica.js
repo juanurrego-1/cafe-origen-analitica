@@ -151,6 +151,26 @@ function clientesRecurrentes(ventas) {
   return recurrentes;
 }
 
+function totalCiudadCadena(ventas, ciudad) {
+  const ciudadBuscada = ciudad.trim().toLowerCase();
+  return ventas
+    .map(v => ({ ...v, ciudad: v.ciudad.trim().toLowerCase() })) // 1er recorrido, crea arreglo 1
+    .filter(v => v.ciudad === ciudadBuscada) // 2do recorrido, crea arreglo 2
+    .map(v => v.cantidad * v.precio) // 3er recorrido, crea arreglo 3
+    .reduce((acc, valor) => acc + valor, 0); // 4to recorrido
+}
+
+function totalCiudadUnaPasada(ventas, ciudad) {
+  const ciudadBuscada = ciudad.trim().toLowerCase();
+  let total = 0;
+  for (const venta of ventas) { // 1 solo recorrido, 0 arreglos nuevos
+    if (venta.ciudad.trim().toLowerCase() === ciudadBuscada) {
+      total += venta.cantidad * venta.precio;
+    }
+  }
+  return total;
+}
+
 module.exports = {
   valorVenta,
   totalVendido,
@@ -168,5 +188,7 @@ module.exports = {
   unidadesPorProductoM,
   topProductosPorValorM,
   ventasDelDia,
-  clientesRecurrentes
+  clientesRecurrentes,
+  totalCiudadCadena,
+  totalCiudadUnaPasada
 };
